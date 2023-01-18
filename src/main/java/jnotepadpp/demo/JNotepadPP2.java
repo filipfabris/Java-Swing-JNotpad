@@ -48,7 +48,7 @@ import jnotepadpp.DefaultMultipleDocumentModel;
 import jnotepadpp.MultipleDocumentListener;
 import jnotepadpp.SingleDocumentModel;
 
-public class JNotepadPP extends JFrame {
+public class JNotepadPP2 extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -64,7 +64,7 @@ public class JNotepadPP extends JFrame {
 
 	private Timer clock;
 
-	public JNotepadPP() {
+	public JNotepadPP2() {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setLocation(0, 0);
 		setSize(800, 800);
@@ -95,28 +95,11 @@ public class JNotepadPP extends JFrame {
 					return;
 				}
 
-				JTextArea editor = currentModel.getTextComponent();
-
+				//JTextArea editor = currentModel.getTextComponent();
 				// int offset =
 				// Math.min(editor.getCaret().getDot(),editor.getCaret().getMark());
 
-				editor.addCaretListener(l -> {
-					int dot = editor.getCaret().getDot();
-					int mark = editor.getCaret().getMark();
-					boolean change = dot != mark;
-
-					upperAction.setEnabled(change);
-					lowerAction.setEnabled(change);
-					invertAction.setEnabled(change);
-					cutAction.setEnabled(change);
-					copyAction.setEnabled(change);
-					ascAction.setEnabled(change);
-					descAction.setEnabled(change);
-
-					JNotepadPP.this.textAreaStatus();
-				});
-
-				JNotepadPP.this.textAreaStatus();
+				JNotepadPP2.this.textAreaStatus();
 			}
 
 			@Override
@@ -255,7 +238,7 @@ public class JNotepadPP extends JFrame {
 		
         ActionListener taskPerformer = new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-            	JNotepadPP.this.time.setText(dateAndTimeFormat.format(LocalDateTime.now()));
+            	JNotepadPP2.this.time.setText(dateAndTimeFormat.format(LocalDateTime.now()));
             }
         };
 
@@ -286,6 +269,25 @@ public class JNotepadPP extends JFrame {
 			System.err.println("Error has acoured during updaing status of text");
 		}
 	}
+	
+	
+	protected void addCaretListener(JTextArea editor) {
+		editor.addCaretListener(l -> {
+			int dot = editor.getCaret().getDot();
+			int mark = editor.getCaret().getMark();
+			boolean change = dot != mark;
+
+			upperAction.setEnabled(change);
+			lowerAction.setEnabled(change);
+			invertAction.setEnabled(change);
+			cutAction.setEnabled(change);
+			copyAction.setEnabled(change);
+			ascAction.setEnabled(change);
+			descAction.setEnabled(change);
+
+			JNotepadPP2.this.textAreaStatus();
+		});
+	}
 
 	private final Action newDocAction = new AbstractAction() {
 
@@ -293,7 +295,8 @@ public class JNotepadPP extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			tabModel.createNewDocument();
+			SingleDocumentModel newDoc =  tabModel.createNewDocument();
+			addCaretListener(newDoc.getTextComponent());
 		}
 	};
 
@@ -304,6 +307,7 @@ public class JNotepadPP extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			openAction();
+			addCaretListener(tabModel.getCurrentDocument().getTextComponent());
 		}
 	};
 
@@ -314,6 +318,7 @@ public class JNotepadPP extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			saveAction();
+			addCaretListener(tabModel.getCurrentDocument().getTextComponent());
 		}
 	};
 
@@ -324,6 +329,7 @@ public class JNotepadPP extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			saveAsAction();
+			addCaretListener(tabModel.getCurrentDocument().getTextComponent());
 		}
 	};
 
@@ -784,7 +790,7 @@ public class JNotepadPP extends JFrame {
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
-			new JNotepadPP().setVisible(true);
+			new JNotepadPP2().setVisible(true);
 		});
 	}
 
